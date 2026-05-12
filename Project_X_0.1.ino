@@ -128,9 +128,15 @@ void setup() {
 
 void loop() {
   int value = sensor_getRawValue();
-  Serial.print("Raaka-arvo: ");
-  Serial.println(value);
-  if (sensor_ballDetected()){
+  
+  if (sensor_ballDetected()) {
+    delay(10);                        // debounce tässä
+    if (!sensor_ballDetected()) {     // vahvistus
+      delay(20);
+      return;                         // oli häiriö, ei pallo
+    }
+    Serial.print("Raaka-arvo: ");
+    Serial.println(value);
     Serial.println("SENSORI: Pallo havaittu!");
     delay(50);          // säätövara lyöntihetkeen
    
@@ -171,9 +177,9 @@ void loop() {
     Serial.println("Odotetaan uutta havaintoa");
     
     // Pitkä suoja-aika sekvenssin jälkeen, ettei laite "hätkyile"
-    delay(5000); 
+    delay(100); 
   }
   
   // Pieni viive, jotta CPU ei käy täysillä
-  delay(5000); 
+  delay(20); 
 }
